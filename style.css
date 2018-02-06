@@ -2,6 +2,14 @@ body{
     background-image:url("assets/waterBackground.jpg");
     font-size:0px;
 }
+video{
+    position:fixed;
+    right:0;
+    bottom:0;
+    min-width:100%;
+    min-height:100%;
+    z-index:-100;
+}
 header{
     font-size:20px;
     text-align:center;
@@ -16,17 +24,37 @@ header{
 #stats{
     font-size:20px;
     position:absolute;
-    top:120px;
+    top:110px;
     left:10px;
     width:100px;
+    opacity:.6;
     background-color:grey;
     border-radius:10%;
     padding:10px;
 }
+.movement{
+    font-size:20px;
+    position:absolute;
+    top:415px;
+    left:10px;
+    width:100px;
+    opacity:.6;
+    background-color:black;
+    border-radius:10%;
+    padding:10px;
+}
 #board{
+    transform:matrix3d(
+            0.7462931356145064,	0.014912162796827562,	0,	0.00008060628538825709,
+            -0.3582821306608857,	0.229288839252779,	0,	-0.0025796946021039167,
+            0,	0,	1,	0,
+            153,	140,	0,	1
+    );
     #width: 500px;
     #height: 500px;
-
+    position:relative;
+    right:150px;
+    bottom:120px;
     margin:auto;
     padding:20px;
     box-sizing:border-box;
@@ -44,14 +72,22 @@ header{
 .cardFront{
     vertical-align:center;
     line-height:80px;
-    background-color:rgba(0,0,0,0);
+    #background-color:rgba(0,0,0,0);
+    background-color:teal;
     font-size:25px;
     border-radius:5%;
 
+}
+.cardFade{
+    background-color:rgba(0,0,0,0);
 }
 .label{
     font-size:16px;
 }
 .value{
     font-size:12px;
+}
+.active{
+    background-color:black;
+    transition: background-color 1s;
 }
