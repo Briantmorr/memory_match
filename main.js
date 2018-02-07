@@ -106,43 +106,79 @@ function updateStats(){
     $('#accuracy .value').text((attempts / match_counter * 100) + '%');
 }
 function handleMovement(){
-    var position = $('.column3.row5');
-        position.css({
-        'background-color':'black'
-    });
-    var up = $('#up');
+    $('.row5.column3').toggleClass('active');
+    var active = {
+        position: $('.row5.column3'),
+        getColumn: function() {
+            var currentColumnIndex = this.position.attr('class').indexOf('column');
+            return parseInt(this.position.attr('class')[currentColumnIndex + 6]);
+        },
+        getRow: function(){
+            var currentRowIndex = this.position.attr('class').indexOf('row');
+            return parseInt(this.position.attr('class')[currentRowIndex + 3]);
+        },
+        moveUp: function(){
+            var row = this.getRow() - 1;
+            var column = this.getColumn();
+            var newPosition = $('.column' + column + '.row' + row);
+            newPosition.toggleClass('active');
+            this.position.toggleClass('active');
+            this.position = newPosition;
+        },
+        moveDown: function(){
+            var row = this.getRow() + 1;
+            var column = this.getColumn();
+            var newPosition = $('.column' + column + '.row' + row);
+            newPosition.toggleClass('active');
+            this.position.toggleClass('active');
+            this.position = newPosition;
+        },
+        moveLeft: function(){
+            var row = this.getRow();
+            var column = this.getColumn() - 1;
+            var newPosition = $('.column' + column + '.row' + row);
+            newPosition.toggleClass('active');
+            this.position.toggleClass('active');
+            this.position = newPosition;
+        },
+        moveRight: function(){
+            var row = this.getRow();
+            var column = this.getColumn() + 1;
+            var newPosition = $('.column' + column + '.row' + row);
+            newPosition.toggleClass('active');
+            this.position.toggleClass('active');
+            this.position = newPosition;
+        },
+        click: function(){
+            this.position.click();
+        }
+
+    };
+    console.log(active.position);
+     var up = $('#up');
     up.on('click', function(){
-        upMove(position);
+        active.moveUp();
+    });
+    var down = $('#back');
+    down.on('click', function(){
+        active.moveDown();
     });
     var left = $('#left');
+    left.on('click', function(){
+        active.moveLeft();
+    });
     var right = $('#right');
-    var down = $('#down');
-}
-function upMove(position) {
-    var currentColumnIndex = position.attr('class').indexOf('column');
-    var currentRowIndex = position.attr('class').indexOf('row');
-    var currentColumn = parseInt(position.attr('class')[currentColumnIndex + 6]);
-    var currentRow = parseInt(position.attr('class')[currentRowIndex + 3]) -1;
-    console.log('column' + currentColumn);
-    console.log('row' + currentRow);
-    var newPosition = $('.column' + currentColumn + '.row' + currentRow);
-    newPosition.css({
-        'background-color': 'black'
+    right.on('click', function(){
+        active.moveRight();
     });
-    position.css({
-       'background-color':'brown'
+    var click = $('#click');
+    click.on('click', function(){
+        active.click();
     });
-    return newPosition;
-}
-function downMove(position){
 
 }
-function leftMove(position){
 
-}
-function rightMove(position){
 
-}
 
 // function createCard(suit, rank){
 //         var card = $('<div>',{

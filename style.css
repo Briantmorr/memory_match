@@ -1,5 +1,5 @@
 body{
-    background-image:url("assets/waterBackground.jpg");
+    #background-image:url("assets/waterBackground.jpg");
     font-size:0px;
 }
 video{
@@ -63,11 +63,14 @@ header{
 }
 .cardBack{
     vertical-align:middle;
-    background-color:saddlebrown;
-    #background-image:url('assets/0062-old-dark-wood-flooring-square-texture-seamless-hr.jpg');
+
+    background-image:url('assets/0062-old-dark-wood-flooring-square-texture-seamless-hr.jpg');
+    #background-color:saddlebrown;
+    #background-repeat:no-repeat;
+    background-size: contain;
     transition: background-color 1.5s;
     font-size:0px;
-    border-radius:5%;
+    #border-radius:5%;
 }
 .cardFront{
     vertical-align:center;
@@ -79,6 +82,7 @@ header{
 
 }
 .cardFade{
+    background-image:none;
     background-color:rgba(0,0,0,0);
 }
 .label{
@@ -88,6 +92,11 @@ header{
     font-size:12px;
 }
 .active{
-    background-color:black;
-    transition: background-color 1s;
+    #position:absolute;
+    background-image: url('assets/monkeyTest3.png'), url('assets/0062-old-dark-wood-flooring-square-texture-seamless-hr.jpg');
+    background-size:contain;
+    background-repeat:no-repeat;
+    background-position: center;
+    transition: background-image .5s;
+
 }
