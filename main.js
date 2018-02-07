@@ -40,19 +40,20 @@ function createBoard(){
         });
         for(var x = 1; x <= 5; x++){
             var column = $('<div>', {
-                class: 'column' + x + ' ' + 'row' + i + ' ' + 'card' + ' ' + 'cardFront',
+                class: 'column' + x + ' ' + 'row' + i + ' ' + 'card' + ' ' + 'cardBack',
                 css:{
                     width:w,
                     height:h,
                     margin:'2px',
                     display:'inline-block',
-                    'background-image': "url(" + cardFronts[randomCardIndexes()] + ")",
-
+                    //'background-image': "url(" + cardFronts[randomCardIndexes()] + ")",
                 },
                 on:{
                     'click': cardFlip}
                 //text:'R' + i + 'C' + x
             });
+            var image = $('<img>').attr('src',  cardFronts[randomCardIndexes()]);
+            column.append(image)
             row.append(column);
         }
         $('#board').append(row);
@@ -62,7 +63,7 @@ function createBoard(){
 
 function cardFlip(){
     var clickedCard = $(this);
-    clickedCard.toggleClass('cardFront');
+    clickedCard.toggleClass('cardBack');
     if (clickedCard.attr('class').indexOf('cardFront') !== -1)
     {
         console.log('flip to front');
