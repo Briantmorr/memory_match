@@ -7,7 +7,23 @@ var first_card_clicked = null;
 var second_card_clicked = null;
 var total_possible_matches = 12;
 var match_counter = 0;
-
+var cardFronts = ['assets/cardFronts/front1.jpg',
+    'assets/cardFronts/front2.jpg',
+    'assets/cardFronts/front3.jpg',
+    'assets/cardFronts/front4.jpg',
+    'assets/cardFronts/front5.jpg',
+    'assets/cardFronts/front6.jpg',
+    'assets/cardFronts/front7.jpg',
+    'assets/cardFronts/front8.jpg',
+    'assets/cardFronts/front9.jpg',
+    'assets/cardFronts/front10.jpg',
+    'assets/cardFronts/front11.jpg',
+    'assets/cardFronts/front12.jpg',
+    'assets/cardFronts/front13.jpg'];
+    // 'assets/cardFronts/front14.png',
+    // 'assets/cardFronts/front15.jpeg',
+    //  ];
+var pairTracker = {};
 function initializeApp(){
         console.log("initializing app...");
         createBoard();
@@ -20,25 +36,28 @@ function createBoard(){
     var h = w;
     for(var i = 1; i <= 5; i++) {
         var row = $('<div>', {
-            class: 'bigrow' + i,
+            class: 'bigRow' + i,
         });
         for(var x = 1; x <= 5; x++){
             var column = $('<div>', {
-                class: 'column' + x + ' ' + 'row' + i + ' ' + 'cardBack',
+                class: 'column' + x + ' ' + 'row' + i + ' ' + 'card' + ' ' + 'cardFront',
                 css:{
                     width:w,
                     height:h,
                     margin:'2px',
                     display:'inline-block',
+                    'background-image': "url(" + cardFronts[randomCardIndexes()] + ")",
+
                 },
                 on:{
-                    'click': cardFlip},
-                text:'R' + i + 'C' + x
+                    'click': cardFlip}
+                //text:'R' + i + 'C' + x
             });
             row.append(column);
         }
         $('#board').append(row);
     }
+    $('.card').addClass('cardBack');
 }
 
 function cardFlip(){
@@ -178,6 +197,20 @@ function handleMovement(){
 
 }
 
+function randomCardIndexes(){
+    var random = Math.floor(Math.random() * cardFronts.length);
+    while(pairTracker[random] >= 2){
+        random = Math.floor(Math.random() * cardFronts.length);
+    }
+    if(pairTracker[random] === undefined){
+        pairTracker[random] = 1;
+    }
+    else{
+        pairTracker[random] += 1;
+    }
+
+    return random;
+}
 
 
 // function createCard(suit, rank){
