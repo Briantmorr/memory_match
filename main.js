@@ -74,7 +74,7 @@ function cardFlip(){
     }
 }
 function resetBoard(){
-    $('.cardFade').toggleClass('cardFade');
+    $('.cardFade').toggleClass('cardFade cardBack');
     // var temp =$('.cardFront');
     // temp.toggleClass('cardFront');
      attempts = 0;

@@ -73,7 +73,7 @@ header{
 }
 .cardBack{
     vertical-align:middle;
-
+    opacity:1;
     background-image:url('assets/0062-old-dark-wood-flooring-square-texture-seamless-hr.jpg');
     #background-color:saddlebrown;
     #background-repeat:no-repeat;
@@ -116,7 +116,7 @@ header{
 }
 .startingPosition{
     #position:absolute;
-    background-image: url('assets/ironSquare2.png');
+    background-image: url('assets/ironSquare3.png');
     background-size:contain;
     background-repeat:no-repeat;
     background-position: center;
