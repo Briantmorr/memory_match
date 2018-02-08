@@ -18,8 +18,8 @@ var cardFronts = ['assets/cardFronts/front1.jpg',
     'assets/cardFronts/front9.jpg',
     'assets/cardFronts/front10.jpg',
     'assets/cardFronts/front11.jpg',
-    'assets/cardFronts/front12.jpg',
-    'assets/cardFronts/front13.jpg'];
+    'assets/cardFronts/front12.jpg'];
+    //'assets/cardFronts/front13.jpg'];
     // 'assets/cardFronts/front14.png',
     // 'assets/cardFronts/front15.jpeg',
     //  ];
@@ -40,7 +40,7 @@ function createBoard(){
         });
         for(var x = 1; x <= 5; x++){
             var column = $('<div>', {
-                class: 'column' + x + ' ' + 'row' + i + ' ' + 'card' + ' ' + 'cardBack',
+                class: 'column' + x + ' ' + 'row' + i + ' ' + 'cardBack',
                 css:{
                     width:w,
                     height:h,
@@ -52,28 +52,31 @@ function createBoard(){
                     'click': cardFlip}
                 //text:'R' + i + 'C' + x
             });
-            var image = $('<img>').attr('src',  cardFronts[randomCardIndexes()]);
-            column.append(image)
+            if(column.attr('class').indexOf('column3 row3') === -1){
+                var image = $('<img>').attr('src',  cardFronts[randomCardIndexes()]);
+                column.append(image)
+            }
             row.append(column);
         }
         $('#board').append(row);
     }
-    $('.card').addClass('cardBack');
+
 }
 
 function cardFlip(){
     var clickedCard = $(this);
-    clickedCard.toggleClass('cardBack');
-    if (clickedCard.attr('class').indexOf('cardFront') !== -1)
-    {
-        console.log('flip to front');
-        checkMatch(clickedCard);
+    if(clickedCard.attr('class').indexOf('cardFade') === -1 && second_card_clicked === null) {
+        clickedCard.toggleClass('cardBack');
+        if (clickedCard.attr('class').indexOf('cardBack') === -1) {
+            console.log('flip to front');
+            checkMatch(clickedCard);
+        }
     }
 }
 function resetBoard(){
     $('.cardFade').toggleClass('cardFade');
-    var temp =$('.cardFront');
-    temp.toggleClass('cardFront');
+    // var temp =$('.cardFront');
+    // temp.toggleClass('cardFront');
      attempts = 0;
      accuracy = 100;
 }
@@ -84,35 +87,37 @@ function checkMatch(clickedCard) {
 
     }
     else if(first_card_clicked.attr('class') === clickedCard.attr('class')){
-        console.log('catch 1');
+        console.log('same card clicked twice');
+        first_card_clicked = null;
     }
-    else if(first_card_clicked.attr('class').indexOf('cardFront') === -1){
 
-        first_card_clicked = clickedCard;
-        console.log('catch 2');
-    }
     else {
-
         attempts++;
         second_card_clicked = clickedCard;
-        if (first_card_clicked.css('background-image') === second_card_clicked.css('background-image') &&
-            first_card_clicked.attr('class') !== second_card_clicked.attr('class')) {
-            console.log('in same background');
+        console.log(first_card_clicked);
+        var image1 = first_card_clicked.children('img').attr('src');
+        var image2 = second_card_clicked.children('img').attr('src');
+        console.log('image 1', image1);
+        if (image1 === image2) {
             match_counter++;
+            console.log('in same background');
+            first_card_clicked.off('click');
+            second_card_clicked.off('click');
             setTimeout(function () {
                 console.log(first_card_clicked);
-                first_card_clicked.addClass('cardFade');
-                second_card_clicked.addClass('cardFade');
+               first_card_clicked.addClass('cardFade');
+               second_card_clicked.addClass('cardFade');
                 first_card_clicked = null;
                 second_card_clicked = null;
             }, 2000);
 
         }
         else {
+
             setTimeout(function () {
                 console.log('in turn back to cardback');
-                second_card_clicked.toggleClass('cardFront');
-                first_card_clicked.toggleClass('cardFront');
+                second_card_clicked.toggleClass('cardBack');
+               first_card_clicked.toggleClass('cardBack');
                 first_card_clicked = null;
                 second_card_clicked = null;
             }, 2000);
@@ -123,12 +128,13 @@ function checkMatch(clickedCard) {
 
 function updateStats(){
     $('#attempts .value').text(attempts);
-    $('#accuracy .value').text((attempts / match_counter * 100) + '%');
+    $('#accuracy .value').text((match_counter / attempts   * 100) + '%');
 }
 function handleMovement(){
-    $('.row5.column3').toggleClass('active');
+
+    $('.row3.column3').toggleClass('startingPosition active').off().removeClass('cardBack cardFront');
     var active = {
-        position: $('.row5.column3'),
+        position: $('.row3.column3'),
         getColumn: function() {
             var currentColumnIndex = this.position.attr('class').indexOf('column');
             return parseInt(this.position.attr('class')[currentColumnIndex + 6]);
@@ -214,30 +220,3 @@ function randomCardIndexes(){
 }
 
 
-// function createCard(suit, rank){
-//         var card = $('<div>',{
-//                 class: 'card '  suit  ' '  rank,
-//                 on:{
-//                     click:toggleCardBack
-//                 }
-//         });
-//         return card;
-//     }
-// function createRandomCard(){
-//         var suitArray = ['heart', 'club', 'diamond', 'spade'];
-//         var rankArray = ['ace', 'two', 'three', 'four',
-//                             'five', 'six', 'seven', 'eight',
-//                             'nine', 'ten', 'jack', 'queen', 'king'];
-//         var suitIndex = Math.floor(Math.random() * suitArray.length);
-//         var rankIndex = Math.floor(Math.random() * rankArray.length);
-//
-//             var randomSuit = suitArray[suitIndex];
-//         var randomRank = rankArray[rankIndex];
-//
-//             var randomCard = createCard(randomSuit, randomRank);
-//        return randomCard;
-//     }
-// function addRandomCardToDom(){
-//         var randomCard = createRandomCard();
-//         $('.container .col:nth-child(2)').append(randomCard);
-//     }
