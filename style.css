@@ -79,11 +79,14 @@ header{
     #background-repeat:no-repeat;
     background-size: contain;
     transition: background-image 1.5s;
-    font-size:0px;
-    #border-radius:5%;
+    #font-size:0px;
+    border-radius:5%;
 }
 .cardBack img{
     display:none;
+}
+.cardFront{
+
 }
 #board img{
     width:100%;

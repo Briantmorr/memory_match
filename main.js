@@ -40,7 +40,7 @@ function createBoard(){
         });
         for(var x = 1; x <= 5; x++){
             var column = $('<div>', {
-                class: 'column' + x + ' ' + 'row' + i + ' ' + 'cardBack',
+                class: 'column' + x + ' ' + 'row' + i + ' ' + 'cardBack' + ' ' + 'card',
                 css:{
                     width:w,
                     height:h,
@@ -64,8 +64,17 @@ function createBoard(){
 }
 
 function cardFlip(){
-    var clickedCard = $(this);
-    if(clickedCard.attr('class').indexOf('cardFade') === -1 && second_card_clicked === null) {
+    var clickedCard = $(this)
+
+    //disable clicks for faded cards and disables clicks when two cards are already up.
+    // Also disables reclicking first card
+    if(clickedCard.attr('class').indexOf('cardFade') === -1
+        && second_card_clicked === null) {
+        if(first_card_clicked !== null
+            && first_card_clicked[0] === clickedCard[0]){
+            console.log("in catch loop");
+            return;
+        }
         clickedCard.toggleClass('cardBack');
         if (clickedCard.attr('class').indexOf('cardBack') === -1) {
             console.log('flip to front');
@@ -74,11 +83,18 @@ function cardFlip(){
     }
 }
 function resetBoard(){
-    $('.cardFade').toggleClass('cardFade cardBack');
-    // var temp =$('.cardFront');
-    // temp.toggleClass('cardFront');
+
+    $('.card').removeClass('cardBack');
+    setTimeout(function(){
+        $('.card').removeClass('cardFade');
+        $('.card').addClass('cardBack');
+    },2000);
+    first_card_clicked = null;
+    second_card_clicked = null;
      attempts = 0;
      accuracy = 100;
+     match_counter = 0;
+     gamesPlayed++;
 }
 function checkMatch(clickedCard) {
     //debugger;
@@ -100,16 +116,19 @@ function checkMatch(clickedCard) {
         console.log('image 1', image1);
         if (image1 === image2) {
             match_counter++;
-            console.log('in same background');
+
             first_card_clicked.off('click');
             second_card_clicked.off('click');
             setTimeout(function () {
-                console.log(first_card_clicked);
                first_card_clicked.addClass('cardFade');
                second_card_clicked.addClass('cardFade');
-                first_card_clicked = null;
-                second_card_clicked = null;
-            }, 2000);
+               first_card_clicked = null;
+               second_card_clicked = null;
+               if(total_possible_matches === match_counter)
+               {
+                   winning();
+               }
+            }, 1800);
 
         }
         else {
@@ -117,10 +136,10 @@ function checkMatch(clickedCard) {
             setTimeout(function () {
                 console.log('in turn back to cardback');
                 second_card_clicked.toggleClass('cardBack');
-               first_card_clicked.toggleClass('cardBack');
+                first_card_clicked.toggleClass('cardBack');
                 first_card_clicked = null;
                 second_card_clicked = null;
-            }, 2000);
+            }, 500);
         }
         updateStats();
     }
@@ -218,5 +237,10 @@ function randomCardIndexes(){
 
     return random;
 }
+
+function winning(){
+    console.log('you won!');
+}
+
 
 
