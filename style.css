@@ -108,15 +108,15 @@ header{
 .value{
     font-size:12px;
 }
-.active{
-    #position:absolute;
-    background-image: url('assets/monkeyTest3.png'), url('assets/0062-old-dark-wood-flooring-square-texture-seamless-hr.jpg');
-    background-size:contain;
-    background-repeat:no-repeat;
-    background-position: center;
-    transition: background-image .5s;
+/*.active{*/
+    /*#position:absolute;*/
+    /*background-image: url('assets/monkeyTest3.png'), url('assets/0062-old-dark-wood-flooring-square-texture-seamless-hr.jpg');*/
+    /*background-size:contain;*/
+    /*background-repeat:no-repeat;*/
+    /*background-position: center;*/
+    /*transition: background-image .5s;*/
 
-}
+/*}*/
 .startingPosition{
     #position:absolute;
     background-image: url('assets/ironSquare3.png');
@@ -131,3 +131,22 @@ header{
     /*left:50%;*/
     /*top:50%;*/
 /*}*/
+#win{
+    background: radial-gradient(rgb(24, 45, 105),  rgb(34, 39, 41));
+    opacity:0.9;
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+    border: 3px solid black;
+    z-index:400;
+    font-size:20px;
+    padding: 0px 15px;
+    transistion: display .6s;
+}
+.monkey{
+    position:absolute;
+    transform: translate(24%, 80%);
+    transition: position 1s;
+
+}

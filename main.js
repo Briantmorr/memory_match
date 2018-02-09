@@ -29,6 +29,26 @@ function initializeApp(){
         createBoard();
         $('.reset').on('click', resetBoard);
         handleMovement();
+    $(document).on('keydown',function(e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        switch (code) {
+            case 40:
+                alert("Down pressed");
+                break;
+            case 38:
+                alert("Up pressed");
+                break;
+            case 37:
+                alert("Left pressed");
+                break;
+            case 39:
+                alert("Right pressed");
+                break;
+            case 13:
+                alert("enter pressed");
+                break;
+        }
+    });
 }
 
 function createBoard(){
@@ -53,8 +73,10 @@ function createBoard(){
                 //text:'R' + i + 'C' + x
             });
             if(column.attr('class').indexOf('column3 row3') === -1){
-                var image = $('<img>').attr('src',  cardFronts[randomCardIndexes()]);
-                column.append(image)
+                var image = $('<img>').attr('src',  cardFronts[randomCardIndexes()]).addClass('imageFront');
+                //var monkey = $('<img>').attr('src',  'assets/monkeyTest3.png').attr('class', 'monkey');
+                column.append(image);
+
             }
             row.append(column);
         }
@@ -83,7 +105,7 @@ function cardFlip(){
     }
 }
 function resetBoard(){
-
+    $('#win').css('display','none');
     $('.card').removeClass('cardBack');
     setTimeout(function(){
         $('.card').removeClass('cardFade');
@@ -150,8 +172,9 @@ function updateStats(){
     $('#accuracy .value').text((match_counter / attempts   * 100) + '%');
 }
 function handleMovement(){
-
-    $('.row3.column3').toggleClass('startingPosition active').off().removeClass('cardBack cardFront');
+    var start = $('.row3.column3');
+        start.toggleClass('startingPosition').off().removeClass('cardBack cardFront');
+        moveMonkey(start);
     var active = {
         position: $('.row3.column3'),
         getColumn: function() {
@@ -166,41 +189,45 @@ function handleMovement(){
             var row = this.getRow() - 1;
             var column = this.getColumn();
             var newPosition = $('.column' + column + '.row' + row);
-            newPosition.toggleClass('active');
-            this.position.toggleClass('active');
+            // newPosition.toggleClass('active');
+            // this.position.toggleClass('active');
             this.position = newPosition;
+            moveMonkey(this.position);
         },
         moveDown: function(){
             var row = this.getRow() + 1;
             var column = this.getColumn();
             var newPosition = $('.column' + column + '.row' + row);
-            newPosition.toggleClass('active');
-            this.position.toggleClass('active');
+            // newPosition.toggleClass('active');
+            // this.position.toggleClass('active');
             this.position = newPosition;
+            moveMonkey(this.position);
         },
         moveLeft: function(){
             var row = this.getRow();
             var column = this.getColumn() - 1;
             var newPosition = $('.column' + column + '.row' + row);
-            newPosition.toggleClass('active');
-            this.position.toggleClass('active');
+            // newPosition.toggleClass('active');
+            // this.position.toggleClass('active');
             this.position = newPosition;
+            moveMonkey(this.position);
         },
         moveRight: function(){
             var row = this.getRow();
             var column = this.getColumn() + 1;
             var newPosition = $('.column' + column + '.row' + row);
-            newPosition.toggleClass('active');
-            this.position.toggleClass('active');
-            this.position = newPosition;
+            //newPosition.toggleClass('active');
+            // this.position.toggleClass('active');
+             this.position = newPosition;
+            moveMonkey(this.position);
         },
         click: function(){
             this.position.click();
         }
 
     };
-    console.log(active.position);
-     var up = $('#up');
+
+    var up = $('#up');
     up.on('click', function(){
         active.moveUp();
     });
@@ -220,9 +247,42 @@ function handleMovement(){
     click.on('click', function(){
         active.click();
     });
+    switch (code) {
+        case 40:
+            active.moveDown();
+            break;
+        case 38:
+            active.moveUp();
+            break;
+        case 37:
+            active.moveLeft();
+            break;
+        case 39:
+            active.moveRight();
+            break;
+        case 13:
+            active.click();
+            break;
+    }
 
 }
-
+function moveMonkey(position){
+    var top = position.position().top;
+    var left = position.position().left;
+    console.log(position.position());
+    console.log('top', top);
+    // $('.monkey').css({
+    //     left: left,
+    //     top: top
+    // });
+    $('.monkey').animate({
+        left: left,
+        top: top},
+        800);
+    // $('.monkey').animate({
+    //         top: top},
+    //     800);
+}
 function randomCardIndexes(){
     var random = Math.floor(Math.random() * cardFronts.length);
     while(pairTracker[random] >= 2){
@@ -240,6 +300,7 @@ function randomCardIndexes(){
 
 function winning(){
     console.log('you won!');
+    $('#win').css('display','block');
 }
 
 
