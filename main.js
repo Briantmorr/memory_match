@@ -19,7 +19,7 @@ var cardFronts = ['assets/cardFronts/front1.jpg',
     'assets/cardFronts/front10.jpg',
     'assets/cardFronts/front11.jpg',
     'assets/cardFronts/front12.jpg'];
-    //'assets/cardFronts/front13.jpg'];
+    //'assets/cardFronts/front13.jpg',
     // 'assets/cardFronts/front14.png',
     // 'assets/cardFronts/front15.jpeg',
     //  ];
@@ -28,29 +28,47 @@ function initializeApp(){
         console.log("initializing app...");
         createBoard();
         $('.reset').on('click', resetBoard);
-        handleMovement();
-    $(document).on('keydown',function(e) {
-        var code = (e.keyCode ? e.keyCode : e.which);
-        switch (code) {
-            case 40:
-                alert("Down pressed");
-                break;
-            case 38:
-                alert("Up pressed");
-                break;
-            case 37:
-                alert("Left pressed");
-                break;
-            case 39:
-                alert("Right pressed");
-                break;
-            case 13:
-                alert("enter pressed");
-                break;
-        }
-    });
-}
 
+        var code = 0;
+    // $(document).on('keydown',function(e) {
+    //     console.log('keypress');
+    //     code = (e.keyCode ? e.keyCode : e.which);
+    // });
+    // debugger;
+    // handleMovement(code);
+    //var grabCode;
+    handleMovement();
+
+
+}
+// $(document).on('keydown',function(e) {
+//     var code = (e.keyCode ? e.keyCode : e.which);
+//     grabCode = code;
+//
+//     switch (code) {
+//         case 40:
+//             alert("Down pressed");
+//             handleMovement(code);
+//             break;
+//         case 38:
+//             alert("Up pressed");
+//             handleMovement(code);
+//             break;
+//         case 37:
+//             alert("Left pressed");
+//             handleMovement(code);
+//
+//             break;
+//         case 39:
+//             alert("Right pressed");
+//             handleMovement(code);
+//             break;
+//         case 13:
+//             alert("enter pressed");
+//             handleMovement(code);
+//             break;
+//     }
+// });
 function createBoard(){
     var w = '80px';
     var h = w;
@@ -171,7 +189,7 @@ function updateStats(){
     $('#attempts .value').text(attempts);
     $('#accuracy .value').text((match_counter / attempts   * 100) + '%');
 }
-function handleMovement(){
+function handleMovement(code){
     var start = $('.row3.column3');
         start.toggleClass('startingPosition').off().removeClass('cardBack cardFront');
         moveMonkey(start);
@@ -189,8 +207,6 @@ function handleMovement(){
             var row = this.getRow() - 1;
             var column = this.getColumn();
             var newPosition = $('.column' + column + '.row' + row);
-            // newPosition.toggleClass('active');
-            // this.position.toggleClass('active');
             this.position = newPosition;
             moveMonkey(this.position);
         },
@@ -198,8 +214,6 @@ function handleMovement(){
             var row = this.getRow() + 1;
             var column = this.getColumn();
             var newPosition = $('.column' + column + '.row' + row);
-            // newPosition.toggleClass('active');
-            // this.position.toggleClass('active');
             this.position = newPosition;
             moveMonkey(this.position);
         },
@@ -207,8 +221,6 @@ function handleMovement(){
             var row = this.getRow();
             var column = this.getColumn() - 1;
             var newPosition = $('.column' + column + '.row' + row);
-            // newPosition.toggleClass('active');
-            // this.position.toggleClass('active');
             this.position = newPosition;
             moveMonkey(this.position);
         },
@@ -216,8 +228,6 @@ function handleMovement(){
             var row = this.getRow();
             var column = this.getColumn() + 1;
             var newPosition = $('.column' + column + '.row' + row);
-            //newPosition.toggleClass('active');
-            // this.position.toggleClass('active');
              this.position = newPosition;
             moveMonkey(this.position);
         },
@@ -228,6 +238,7 @@ function handleMovement(){
     };
 
     var up = $('#up');
+
     up.on('click', function(){
         active.moveUp();
     });
@@ -247,8 +258,10 @@ function handleMovement(){
     click.on('click', function(){
         active.click();
     });
+    console.log('move', code);
     switch (code) {
         case 40:
+            console.log('move up key');
             active.moveDown();
             break;
         case 38:
