@@ -27,6 +27,7 @@ var pairTracker = {};
 function initializeApp(){
         console.log("initializing app...");
         createBoard();
+
         $('.reset').on('click', resetBoard);
 
         var code = 0;
@@ -192,7 +193,19 @@ function updateStats(){
 function handleMovement(code){
     var start = $('.row3.column3');
         start.toggleClass('startingPosition').off().removeClass('cardBack cardFront');
-        moveMonkey(start);
+
+
+
+        var monkey = $('<img>').attr('src', 'assets/monkeyTest1.png');
+        monkey.addClass('monkey').css({
+            top: start.position().top,
+            left: start.position().left
+        });
+        console.log('monk', monkey);
+        $('body').append(monkey);
+
+
+        //moveMonkey(start);
     var active = {
         position: $('.row3.column3'),
         getColumn: function() {
@@ -232,7 +245,7 @@ function handleMovement(code){
             moveMonkey(this.position);
         },
         click: function(){
-            this.position.click();
+            monkeyClick(this.position);
         }
 
     };
@@ -279,22 +292,27 @@ function handleMovement(code){
     }
 
 }
+function monkeyClick(position){
+    var top = parseFloat(position.position().top);
+    console.log('monkey top', top);
+     $('.monkey').animate({
+            top:   top + -40 },800);
+     setTimeout(function(){
+         position.click()},8000);
+}
+
 function moveMonkey(position){
+
     var top = position.position().top;
     var left = position.position().left;
     console.log(position.position());
     console.log('top', top);
-    // $('.monkey').css({
-    //     left: left,
-    //     top: top
-    // });
+
     $('.monkey').animate({
         left: left,
         top: top},
         800);
-    // $('.monkey').animate({
-    //         top: top},
-    //     800);
+
 }
 function randomCardIndexes(){
     var random = Math.floor(Math.random() * cardFronts.length);
