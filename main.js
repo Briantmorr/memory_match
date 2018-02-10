@@ -7,22 +7,22 @@ var first_card_clicked = null;
 var second_card_clicked = null;
 var total_possible_matches = 12;
 var match_counter = 0;
-var cardFronts = ['assets/cardFronts/front1.jpg',
-    'assets/cardFronts/front2.jpg',
-    'assets/cardFronts/front3.jpg',
-    'assets/cardFronts/front4.jpg',
-    'assets/cardFronts/front5.jpg',
-    'assets/cardFronts/front6.jpg',
-    'assets/cardFronts/front7.jpg',
-    'assets/cardFronts/front8.jpg',
-    'assets/cardFronts/front9.jpg',
-    'assets/cardFronts/front10.jpg',
-    'assets/cardFronts/front11.jpg',
-    'assets/cardFronts/front12.jpg'];
-    //'assets/cardFronts/front13.jpg',
-    // 'assets/cardFronts/front14.png',
-    // 'assets/cardFronts/front15.jpeg',
-    //  ];
+var cardFronts = [
+    'assets/fruitCards/banana.png',
+    'assets/fruitCards/Blueberries.png',
+    'assets/fruitCards/cherries.png',
+    'assets/fruitCards/grapes.png',
+    'assets/fruitCards/kiwi.png',
+    'assets/fruitCards/lemon.png',
+    'assets/fruitCards/orange.png',
+    'assets/fruitCards/pear.png',
+    'assets/fruitCards/Pineapple.png',
+    'assets/fruitCards/strawberry.png',
+    'assets/fruitCards/watermelon.png',
+    'assets/fruitCards/Pineapple.png'
+    ];
+
+
 var pairTracker = {};
 function initializeApp(){
         console.log("initializing app...");
@@ -113,12 +113,12 @@ function cardFlip(){
         && second_card_clicked === null) {
         if(first_card_clicked !== null
             && first_card_clicked[0] === clickedCard[0]){
-            console.log("in catch loop");
+
             return;
         }
         clickedCard.toggleClass('cardBack');
         if (clickedCard.attr('class').indexOf('cardBack') === -1) {
-            console.log('flip to front');
+
             checkMatch(clickedCard);
         }
     }
@@ -130,6 +130,8 @@ function resetBoard(){
         $('.card').removeClass('cardFade');
         $('.card').addClass('cardBack');
     },2000);
+    //workaround to move monkey back to start
+    handleMovement('reset');
     first_card_clicked = null;
     second_card_clicked = null;
      attempts = 0;
@@ -144,17 +146,14 @@ function checkMatch(clickedCard) {
 
     }
     else if(first_card_clicked.attr('class') === clickedCard.attr('class')){
-        console.log('same card clicked twice');
         first_card_clicked = null;
     }
 
     else {
         attempts++;
         second_card_clicked = clickedCard;
-        console.log(first_card_clicked);
         var image1 = first_card_clicked.children('img').attr('src');
         var image2 = second_card_clicked.children('img').attr('src');
-        console.log('image 1', image1);
         if (image1 === image2) {
             match_counter++;
 
@@ -175,7 +174,6 @@ function checkMatch(clickedCard) {
         else {
 
             setTimeout(function () {
-                console.log('in turn back to cardback');
                 second_card_clicked.toggleClass('cardBack');
                 first_card_clicked.toggleClass('cardBack');
                 first_card_clicked = null;
@@ -190,22 +188,8 @@ function updateStats(){
     $('#attempts .value').text(attempts);
     $('#accuracy .value').text((match_counter / attempts   * 100) + '%');
 }
-function handleMovement(code){
-    var start = $('.row3.column3');
-        start.toggleClass('startingPosition').off().removeClass('cardBack cardFront');
-
-
-
-        var monkey = $('<img>').attr('src', 'assets/monkeyTest1.png');
-        monkey.addClass('monkey').css({
-            top: start.position().top,
-            left: start.position().left
-        });
-        console.log('monk', monkey);
-        $('body').append(monkey);
-
-
-        //moveMonkey(start);
+function handleMovement(reset, code){
+    //moveMonkey(start);
     var active = {
         position: $('.row3.column3'),
         getColumn: function() {
@@ -221,34 +205,62 @@ function handleMovement(code){
             var column = this.getColumn();
             var newPosition = $('.column' + column + '.row' + row);
             this.position = newPosition;
-            moveMonkey(this.position);
+            moveMonkey(active);
         },
         moveDown: function(){
             var row = this.getRow() + 1;
             var column = this.getColumn();
             var newPosition = $('.column' + column + '.row' + row);
             this.position = newPosition;
-            moveMonkey(this.position);
+            moveMonkey(active);
         },
         moveLeft: function(){
             var row = this.getRow();
             var column = this.getColumn() - 1;
             var newPosition = $('.column' + column + '.row' + row);
             this.position = newPosition;
-            moveMonkey(this.position);
+            moveMonkey(active);
         },
         moveRight: function(){
             var row = this.getRow();
             var column = this.getColumn() + 1;
             var newPosition = $('.column' + column + '.row' + row);
-             this.position = newPosition;
-            moveMonkey(this.position);
+            this.position = newPosition;
+            moveMonkey(active);
         },
         click: function(){
             monkeyClick(this.position);
+        },
+        moveToStart(){
+           
+            this.position = $('.row3.column3');
+            moveMonkey(active);
+            $('.monkey').css({
+                top: this.position().top + 180,
+                left: this.position().left
+            });
         }
 
     };
+    if(reset === 'reset'){
+        active.moveToStart();
+        return;
+    }
+
+    var start = $('.row3.column3');
+        start.toggleClass('startingPosition').off().removeClass('cardBack cardFront');
+
+
+
+        var monkey = $('<img>').attr('src', 'assets/monkeyTest1.png');
+        monkey.addClass('monkey').css({
+            top: start.position().top + 180,
+            left: start.position().left
+        });
+        $('body').append(monkey);
+
+
+
 
     var up = $('#up');
 
@@ -271,7 +283,6 @@ function handleMovement(code){
     click.on('click', function(){
         active.click();
     });
-    console.log('move', code);
     switch (code) {
         case 40:
             console.log('move up key');
@@ -294,19 +305,16 @@ function handleMovement(code){
 }
 function monkeyClick(position){
     var top = parseFloat(position.position().top);
-    console.log('monkey top', top);
      $('.monkey').animate({
-            top:   top + -40 },800);
+            top:   top + 145 },400);
      setTimeout(function(){
-         position.click()},8000);
+         position.click()},800);
 }
 
-function moveMonkey(position){
-
-    var top = position.position().top;
-    var left = position.position().left;
-    console.log(position.position());
-    console.log('top', top);
+function moveMonkey(active){
+    debugger;
+    var top = active.position.position().top + 180;
+    var left = active.position.position().left;
 
     $('.monkey').animate({
         left: left,
