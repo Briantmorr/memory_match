@@ -1,7 +1,0 @@
-version, not sure how to change to version.5
-commit"monkey things"
-need to add cardFronts
-clicks trigger fade, but not monkey clicks
-edit video to loop correctly 
-adjust matrix.
-figure out why Image isn't sharp

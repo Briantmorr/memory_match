@@ -1,3 +1,0 @@
-Minihackathon project rules
-Project manager should do at least 1 standup per session:
-get it to work on the side, then incorporate it in. 
