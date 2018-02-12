@@ -13,16 +13,12 @@
     <script type="text/javascript" src="main.js"></script>
 </head>
 <body>
-    <!--<video autoplay muted loop id="myVideo">-->
-        <!--<source src="assets/giphy.mp4" type="video/mp4">-->
-    <!--</video>-->
 
     <header>
-        <!--<img src="logo" alt="game logo">-->
         <img src="assets/memoryMatchLogo1.png">
         <ul>
-            <li><a href="game menu">Game Info</a></li>
-            <li><a href="game menu">About Me</a></li>
+            <li id ='gameInfo'>Game Info</li>
+            <li>About Me</li>
         </ul>
     </header>
     <div id="main">
@@ -32,9 +28,13 @@
         Cards will be here
     </div>
     <div id="stats">
-        Stats
+        Stats <hr/>
         <div id="games-played">
             <h3 class="label">Games Played</h3>
+            <h4 class="value">0</h4>
+        </div>
+        <div id="matches">
+            <h3 class="label">Correct Matches</h3>
             <h4 class="value">0</h4>
         </div>
         <div id="attempts">
@@ -54,10 +54,38 @@
         <button id="back">down</button>
         <button id="click">click</button>
     </div>
-    <!--<img class='monkey hidden' src="assets/monkeyTest1.png">-->
+    <div class="lives">
+        <img src="assets/hearts.png">
+        <img src="assets/hearts.png">
+        <img src="assets/hearts.png">
     </div>
     <div id="win" style="display:none">
         <h1>You Win!</h1>
+    </div>
+    <div id="lose" style="display:none">
+        <h1>You Lose!</h1>
+    </div>
+    <div id="moveAlert">
+        <h1>Move Before the blocks fall!</h1>
+    </div>
+    <div id="gameInfoModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h1>How to play:</h1>
+            <hr/>
+            <p>Help the monkey collect all the fruit! <br>
+                Use the buttons on the right side or the arrow keys to move the monkey! <br>
+                Click on the tiles with the click button (or push enter) to see the cards underneath! <br>
+                Do your best to match all the titles, but be careful, once you make a match the tiles will disappear.
+                <br><br>
+                If you try to move into a space that doesn't have a wooden block you will fall and lose a life!<br>
+                Try to get all the fruit before you run out of lives!<br>
+                If you can get 8 matches you win!<br> if you can get all 12 you are the king of the jungle!
+            </p>
+        </div>
+
     </div>
 </body>
 </html>

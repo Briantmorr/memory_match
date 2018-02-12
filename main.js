@@ -6,7 +6,7 @@ var accuracy = 100;
 var first_card_clicked = null;
 var second_card_clicked = null;
 var total_possible_matches = 12;
-var match_counter = 0;
+var match_counter = 8;
 var cardFronts = [
     'assets/fruitCards/banana.png',
     'assets/fruitCards/Blueberries.png',
@@ -22,20 +22,20 @@ var cardFronts = [
     'assets/fruitCards/Pineapple.png'
     ];
 var pairTracker = {};
+var lifeCount = 3;
 
 function initializeApp(){
         console.log("initializing app...");
         createBoard();
-        // var code = 0;
-    // $(document).on('keydown',function(e) {
-    //     console.log('keypress');
-    //     code = (e.keyCode ? e.keyCode : e.which);
-    // });
-    // debugger;
 
-    //var grabCode;
+        createModal();
+        var active = passMonkey();
+         startMonkey();
+        handleButtons(active);
 
 
+}
+function passMonkey(){
     var active = {
         position: $('.row3.column3'),
         getColumn: function() {
@@ -124,10 +124,7 @@ function initializeApp(){
 
 
     };
-         startMonkey();
-        handleButtons(active);
-
-
+    return active;
 }
 function handleButtons(active){
     window.addEventListener('resize', active.moveToStart);
@@ -135,7 +132,6 @@ function handleButtons(active){
         resetBoard(active);
     });
     var up = $('#up');
-
     up.on('click', function(){
         active.moveUp();
     });
@@ -155,53 +151,34 @@ function handleButtons(active){
     click.on('click', function(){
         active.click();
     });
-    // switch (code) {
-    //     case 40:
-    //         console.log('move up key');
-    //         active.moveDown();
-    //         break;
-    //     case 38:
-    //         active.moveUp();
-    //         break;
-    //     case 37:
-    //         active.moveLeft();
-    //         break;
-    //     case 39:
-    //         active.moveRight();
-    //         break;
-    //     case 13:
-    //         active.click();
-    //         break;
-    // }
+
+    $(document).on('keydown',function(e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    grabCode = code;
+
+    switch (code) {
+        case 40:
+
+            active.moveDown();
+            break;
+        case 38:
+
+            active.moveUp();
+            break;
+        case 37:
+           active.moveLeft();
+            break;
+        case 39:
+            active.moveRight();
+            break;
+        case 13:
+            active.click();
+            break;
+    }
+});
 }
-// $(document).on('keydown',function(e) {
-//     var code = (e.keyCode ? e.keyCode : e.which);
-//     grabCode = code;
-//
-//     switch (code) {
-//         case 40:
-//             alert("Down pressed");
-//             handleMovement(code);
-//             break;
-//         case 38:
-//             alert("Up pressed");
-//             handleMovement(code);
-//             break;
-//         case 37:
-//             alert("Left pressed");
-//             handleMovement(code);
-//
-//             break;
-//         case 39:
-//             alert("Right pressed");
-//             handleMovement(code);
-//             break;
-//         case 13:
-//             alert("enter pressed");
-//             handleMovement(code);
-//             break;
-//     }
-// });
+
+
 function createBoard(){
     var w = '80px';
     var h = w;
@@ -218,8 +195,8 @@ function createBoard(){
                     margin:'2px',
                     display:'inline-block',
                 },
-                on:{
-                    'click': cardFlip}
+                 on:{
+                     'click': cardFlip}
                 //text:'R' + i + 'C' + x
             });
             if(column.attr('class').indexOf('column3 row3') === -1){
@@ -262,10 +239,8 @@ function resetBoard(active){
         randomizeCards();
 
     },2000);
-    //workaround to move monkey back to start
-
     active.moveToStart();
-    // delete active.position;
+
     first_card_clicked = null;
     second_card_clicked = null;
      attempts = 0;
@@ -273,6 +248,8 @@ function resetBoard(active){
      match_counter = 0;
      gamesPlayed++;
      updateStats();
+    $('#lose').css('display','none');
+    $('#win').css('display','none');
 }
 function checkMatch(clickedCard) {
 
@@ -291,15 +268,30 @@ function checkMatch(clickedCard) {
         var image2 = second_card_clicked.children('img').attr('src');
         if (image1 === image2) {
             match_counter++;
-
+            var monkeyPosition = $('.monkey').position().top;
+            console.log(monkeyPosition);
             first_card_clicked.off('click');
             second_card_clicked.off('click');
+            $('#moveAlert').css('display', 'inline-block');
             setTimeout(function () {
                first_card_clicked.addClass('cardFade');
                second_card_clicked.addClass('cardFade');
                first_card_clicked = null;
                second_card_clicked = null;
-               if(total_possible_matches === match_counter)
+               console.log('second', $('.monkey').position().top);
+
+               $('#moveAlert').css('display', 'none');
+
+
+               if(monkeyPosition == $('.monkey').position().top){
+                   console.log('final', $('.monkey').position().top)
+                   var active = passMonkey();
+                   monkeyFall('up', active);
+                   setTimeout(function(){
+                       active.moveToStart();
+                   },3000);
+                }
+               if(total_possible_matches <= match_counter)
                {
                    winning();
                }
@@ -322,10 +314,11 @@ function checkMatch(clickedCard) {
 
 function updateStats(){
     $('#attempts .value').text(attempts);
+    $('#matches .value').text(match_counter);
     if(attempts === 0){
         $('#accuracy .value').text('100%');
 }   else{
-        $('#accuracy .value').text((match_counter / attempts   * 100) + '%');
+        $('#accuracy .value').text((match_counter / attempts   * 100).toFixed(2) + '%');
     }
     $('#games-played .value').text(gamesPlayed);
 }
@@ -336,27 +329,28 @@ function startMonkey(){
 
 
 
-        var monkey = $('<img>').attr('src', 'assets/monkeyTest1.png');
+        var monkey = $('<img>').attr('src', 'assets/monkeyTest1.png').css({
+            width:'100px',
+            height:'100px'
+        });
         monkey.addClass('monkey').css({
-            top: start.position().top + 205,
+            top: start.position().top,
             left: start.position().left
         });
-        $('body').append(monkey);
+        $('#board').append(monkey);
 
 
 }
 function monkeyClick(position){
     var top = parseFloat(position.position().top);
-    //top = top + top * .003;
-    //+ 150
      $('.monkey').animate({
-            top:   top + 150  },400);
+            top:   top - 60},400);
      setTimeout(function(){
          position.click()},800);
 }
 
 function moveMonkey(active){
-    var top = active.position.position().top + 205;
+    var top = active.position.position().top;
     var left = active.position.position().left;
 
     $('.monkey').animate({
@@ -385,6 +379,10 @@ function winning(){
     console.log('you won!');
     $('#win').css('display','block');
 }
+function losing(){
+    console.log('you lose');
+    $('#lose').css('display','block');
+}
 
 
 function randomizeCards(){
@@ -407,8 +405,8 @@ function falseMonkey(){
     var top = monkey.position().top;
     setTimeout( function(){
         monkey.animate({
-            top: top + 30
-        }, 800);
+            top: top + 80
+        }, 900);
     }, 400)
 }
 function invalidMove(active) {
@@ -455,4 +453,39 @@ function monkeyFall(direction, active){
         active.moveToStart();
     }, 3000)
 
+    debugger;
+    $('.lives img:nth-child(' + lifeCount + ')').css('display','none');
+    lifeCount--;
+    if(lifeCount === 0){
+        setTimeout(function(){
+            losing();
+        }, 3000)
+    }
+}
+function createModal(){
+    // Get the modal
+    var modal = document.getElementById('gameInfoModal');
+
+// Get the button that opens the modal
+    var gameInfo = document.getElementById("gameInfo");
+
+// Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+    gameInfo.onclick = function() {
+        modal.style.display = "block";
+    }
+
+// When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+// When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 }
