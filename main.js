@@ -33,7 +33,6 @@ function initializeApp(){
          startMonkey();
         handleButtons(active);
 
-
 }
 function passMonkey(){
     var active = {
@@ -127,7 +126,10 @@ function passMonkey(){
     return active;
 }
 function handleButtons(active){
-    window.addEventListener('resize', active.moveToStart);
+    window.addEventListener('resize', function() {
+        active.moveToStart();
+        hideExtras();
+    });
     $('.reset').on('click', function(){
         resetBoard(active);
     });
@@ -487,5 +489,19 @@ function createModal(){
         if (event.target == modal) {
             modal.style.display = "none";
         }
+    }
+}
+function hideExtras(){
+    bodyWidth = parseInt($('body').css('width'))
+    console.log(bodyWidth);
+    if (bodyWidth > 700) {
+        // if screen size is 1025px wide or larger
+        $("#stats").css('display', 'inline-block'); // you can also use $(".yourClass").hide();
+        $(".movement").css('display', 'inline-block');
+    }
+    else if ((bodyWidth <= 700))  {
+        // if screen size width is less than 1024px
+        $("#stats").css('display', 'none'); // here you can also use show();
+        $(".movement").css('display', 'none');
     }
 }
