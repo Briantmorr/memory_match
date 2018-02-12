@@ -99,7 +99,7 @@ hr {
             /*0,	0,	1,	0,*/
             /*160,	100,	0,	1*/
     /*);*/
-
+    pointer-events:none;
     position:absolute;
     top:60%;
     left:50%;
